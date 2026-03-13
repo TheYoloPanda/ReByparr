@@ -81,6 +81,12 @@ async def read_item(request: LinkRequest, dep: CamoufoxDep) -> LinkResponse:
                 ),
                 timeout=timer.remaining(),
             )
+            await dep.page.wait_for_load_state(
+                "domcontentloaded", timeout=timer.remaining() * 1000
+            )
+            await dep.page.wait_for_load_state(
+                "networkidle", timeout=timer.remaining() * 1000
+            )
             status = HTTPStatus.OK
             logger.debug("Challenge solved successfully.")
     except TimeoutError as e:
